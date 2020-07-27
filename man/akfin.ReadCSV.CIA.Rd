@@ -2,32 +2,23 @@
 % Please edit documentation in R/akfin.ReadCSVs.R
 \name{akfin.ReadCSV.CIA}
 \alias{akfin.ReadCSV.CIA}
-\title{Calculate estimated total bycatch abundance and biomass of Tanner crab in groundfish fisheries}
+\title{Read a csv file from AKFIN with CIA (Catch-in-Areas) data}
 \usage{
 akfin.ReadCSV.CIA(fn, minYear = 2009)
 }
 \arguments{
-\item{fn}{- filename for bycatch estimates from Catch-In_Areas database}
+\item{fn}{- filename for bycatch estimates from the Catch-in-Areas database}
 
 \item{minYear}{- min fishery year to extract}
 }
 \value{
-tibble with columns
- * fishery
- * area
- * year
- * expFactor - expansion factor
- * sex - "male", "female", "undetermined", "hermaphrodite", or NA
- * variable - "count", "weight", "abundance", or "biomass"
- * value - value of associated variable
- * type - "observed" or "expanded"
- * units - "ones", "thousands", "kg" or "t"
+tibble with columns "year","target","gear code","adfg stat area","nmfs stat area",
+"haul count","biomass","number","conf flag","vessel count", and "gear". Units for biomass
+and number are kg and one's (i.e., unscaled number of crab).
 }
 \description{
-Function to calculate estimated total catch abundance by expanding observed abundance.
+Function to read a csv file from AKFIN with CIA (Catch-in-Areas) data.
 }
 \details{
-Uses \code{sqldf::sqldf}. Units for 'weight' are kg, for 'abundance' are thousands, and for 'biomass' are t.
-Historical (foreign, joint veture) data runs 1973-1990. CAS data is used for 1991-2008. CIA data is used for
-2009+.
+CIA data begins in 2009.
 }

@@ -16,5 +16,6 @@ character vector with same length as x
 Function to convert sex codes to descriptions.
 }
 \details{
-None.
+Uses conversions from \code{code} to \code{sex} 
+defined by \code{akfin.GetSexConversions}.
 }

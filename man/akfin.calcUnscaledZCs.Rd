@@ -2,14 +2,14 @@
 % Please edit documentation in R/akfin.CalcFunctions.R
 \name{akfin.calcUnscaledZCs}
 \alias{akfin.calcUnscaledZCs}
-\title{Calculate estimated total bycatch abundance and biomass of Tanner crab in groundfish fisheries}
+\title{Calculate size compositions for Tanner crab bycatch in the groundfish fisheries based on observed samples}
 \usage{
 akfin.calcUnscaledZCs(
   maxYear = 2019,
   fnHisZCs = NULL,
   fnNORPAC = NULL,
   id.facs = c("year", "gear", "area", "sex"),
-  cutpts = seq(25, 185, 5),
+  cutpts = seq(0, 185, 5),
   truncate.low = TRUE,
   truncate.high = FALSE
 )
@@ -17,20 +17,25 @@ akfin.calcUnscaledZCs(
 \arguments{
 \item{maxYear}{- max fishery year to extract}
 
-\item{fnHisZCs}{- filename for size composition estimates (numbers of crab) from "historical data" (pre-CAS)}
+\item{fnHisZCs}{- file name for size composition estimates (numbers of crab) from "historical data" (pre-CAS)}
 
-\item{fnNORPAC}{- filename for size data (numbers of crab) from a NORPAC length report file}
+\item{fnNORPAC}{- file name for size data (numbers of crab) from a NORPAC length report file}
 
-\item{verbosity}{- integer flag for diagnostic printout (0,1,2)}
+\item{id.facs}{- character vector of column names to use as factors in calculating size compositions}
+
+\item{cutpts}{- cut points for size bins (default is 0-185 by 5)}
+
+\item{truncate.low}{-flag to truncate counts/abundance below the minimum size or include in first size bin (FALSE)}
+
+\item{truncate.high}{- flag to truncate counts/abundance above the maximum size (TRUE) or include in final size bin (FALSE)}
 }
 \value{
-tibble with columns
+tibble with columns 'year','gear','area','sex','maturity','shell condition','size','N'
 }
 \description{
-Function to calculate estimated total catch abundance by expanding observed abundance.
+Function to calculate size compositions for Tanner crab bycatch in the groundfish fisheries based on observed samples.
 }
 \details{
-Uses \code{sqldf::sqldf}. Units for 'weight' are kg, for 'abundance' are thousands, and for 'biomass' are t.
-Historical (foreign, joint veture) data runs 1973-1990. CAS data is used for 1991-2008. CIA data is used for
-2009+.
+Historical (foreign, joint venture) size composition data runs 1973-1990. NORPAC size composition data
+starts in 1986, but is typically not used until 1991.
 }

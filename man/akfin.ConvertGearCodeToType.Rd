@@ -2,16 +2,20 @@
 % Please edit documentation in R/akfin.AllConversions.R
 \name{akfin.ConvertGearCodeToType}
 \alias{akfin.ConvertGearCodeToType}
-\title{Create dataframe describing gear conversions}
+\title{Convert gear codes to gear types}
 \usage{
 akfin.ConvertGearCodeToType(x)
+}
+\arguments{
+\item{x}{- vector of gear codes to convert to gear types}
 }
 \value{
 character vector with same length as x
 }
 \description{
-Function to create dataframe describing gear conversions.
+Function to convert gear codes to gear types.
 }
 \details{
-None.
+Uses conversions from \code{code} to \code{type} 
+defined by \code{akfin.GetGearConversions}.
 }

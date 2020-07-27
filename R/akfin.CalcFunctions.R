@@ -28,6 +28,7 @@
 #' @import dplyr
 #' 
 #' @importFrom sqldf sqldf
+#' @importFrom tidyselect contains
 #' @importFrom wtsUtilities Sum
 #'
 #' @export
@@ -40,7 +41,7 @@ akfin.calcBycatchABs<-function(maxYear=2019,
   mnYrCAS = 1991;#--first year for reliable CAS data
   mnYrCIA = 2009;#--first year for reliable CIA data
   
-  MILLION<-1000000;
+  MILLION <- 1000000;    #division factor from ones to millions
   LBStoKG <- 0.45359237; #multiplication factor to get kg from lbs
 
   #flags for printing diagnostic info
@@ -95,29 +96,31 @@ akfin.calcBycatchABs<-function(maxYear=2019,
   return(dfr);
 }
 # dirData="~/Work/StockAssessments-Crab/Data/Fisheries/Fishery.AKFIN/Current";
-# fnHisABs="GroundfishFisheries.HistoricalABs.TannerCrab.csv";
-# fnCAS="FromAKFIN.TannerCrab.BycatchEstimates.CAS.csv";
-# fnCIA="FromAKFIN.TannerCrab.BycatchEstimates.CIA.csv";
-# tblABs<-akfin.calcBycatchABs(maxYear = 2019,
-#                              fnHIS = file.path(dirData,fnHisABs),
-#                              fnCAS = file.path(dirData,fnCAS),
-#                              fnCIA = file.path(dirData,fnCIA));
+# fnHisABs=file.path(dirData,"GroundfishFisheries.HistoricalABs.TannerCrab.csv");
+# fnCAS=file.path(dirData,"FromAKFIN.TannerCrab.BycatchEstimates.CAS.csv");
+# fnCIA=file.path(dirData,"FromAKFIN.TannerCrab.BycatchEstimates.CIA.csv");
+# dfrABs.YGAT<-akfin.calcBycatchABs(maxYear = 2019,
+#                                   fnHIS = fnHisABs,
+#                                   fnCAS = fnCAS,
+#                                   fnCIA = fnCIA);
 
 #'
-#' @title Calculate estimated total bycatch abundance and biomass of Tanner crab in groundfish fisheries
+#' @title Calculate size compositions for Tanner crab bycatch in the groundfish fisheries based on observed samples
 #'
-#' @description Function to calculate estimated total catch abundance by expanding observed abundance.
+#' @description Function to calculate size compositions for Tanner crab bycatch in the groundfish fisheries based on observed samples.
 #'
 #' @param maxYear - max fishery year to extract
-#' @param fnHisZCs - filename for size composition estimates (numbers of crab) from "historical data" (pre-CAS)
-#' @param fnNORPAC - filename for size data (numbers of crab) from a NORPAC length report file
-#' @param verbosity - integer flag for diagnostic printout (0,1,2)
+#' @param fnHisZCs - file name for size composition estimates (numbers of crab) from "historical data" (pre-CAS)
+#' @param fnNORPAC - file name for size data (numbers of crab) from a NORPAC length report file
+#' @param id.facs - character vector of column names to use as factors in calculating size compositions
+#' @param cutpts - cut points for size bins (default is 0-185 by 5)
+#' @param truncate.low -flag to truncate counts/abundance below the minimum size or include in first size bin (FALSE)
+#' @param truncate.high - flag to truncate counts/abundance above the maximum size (TRUE) or include in final size bin (FALSE)
 #'
-#' @return tibble with columns
+#' @return tibble with columns 'year','gear','area','sex','maturity','shell condition','size','N'
 #'
-#' @details Uses \code{sqldf::sqldf}. Units for 'weight' are kg, for 'abundance' are thousands, and for 'biomass' are t.
-#' Historical (foreign, joint veture) data runs 1973-1990. CAS data is used for 1991-2008. CIA data is used for
-#' 2009+.
+#' @details Historical (foreign, joint venture) size composition data runs 1973-1990. NORPAC size composition data
+#' starts in 1986, but is typically not used until 1991.
 #'
 #' @import magrittr
 #' @import dplyr
@@ -131,7 +134,7 @@ akfin.calcUnscaledZCs<-function(maxYear=2019,
                                 fnHisZCs=NULL,
                                 fnNORPAC=NULL,
                                 id.facs=c("year","gear","area","sex"),
-                                cutpts=seq(25,185,5),
+                                cutpts=seq(0,185,5),
                                 truncate.low=TRUE,
                                 truncate.high=FALSE){
   #--Process historical ZCs
@@ -144,6 +147,22 @@ akfin.calcUnscaledZCs<-function(maxYear=2019,
                 dplyr::mutate(count=NULL) %>% 
                 dplyr::relocate(gear,area,.after=year)  %>%
                 subset(year<=1990);
+    #--re-calculate size comps to cutpts
+    dfrZCs.HIS<-wtsSizeComps::calcSizeComps(dfrZCs.HIS,
+                                            id.size="size",
+                                            id.value="N",
+                                            id.facs=id.facs,
+                                            cutpts=cutpts,
+                                            truncate.low=truncate.low,
+                                            truncate.high=truncate.high);
+    cols<-names(dfrZCs.HIS);
+    if (!("year" %in% cols))            dfrZCs.HIS$year              = "undetermined";
+    if (!("gear" %in% cols))            dfrZCs.HIS$gear              = "undetermined";
+    if (!("area" %in% cols))            dfrZCs.HIS$area              = "undetermined";
+    if (!("sex" %in% cols))             dfrZCs.HIS$sex               = "undetermined";
+    if (!("maturity" %in% cols))        dfrZCs.HIS$maturity          = "undetermined";
+    if (!("shell condition" %in% cols)) dfrZCs.HIS$`shell condition` = "undetermined";
+    dfrZCs.HIS <- dfrZCs.HIS[,c("year","gear","area","sex","maturity","shell condition","size","N")];#--drop ss
   }
 
   #--Process NORPAC size compositions
@@ -152,10 +171,10 @@ akfin.calcUnscaledZCs<-function(maxYear=2019,
     #--read recent NORPAC length report file
     tblNLR<-akfin.ReadCSV.NorpacLengthReport(fnNORPAC);
     
-    #--keep after minYr-1, drop "unidentified" sex
+    #--keep minYr on, drop "unidentified" sex
     minYr = ifelse(!is.null(dfrZCs.HIS),1991,1986);
     dfrNLR <- tblNLR %>% 
-                subset((year>=minYr)&(year<=maxYr)) %>% 
+                subset((year>=minYr)&(year<=maxYear)) %>% 
                 subset((sex!="unidentified"));
     
     #--bin and aggregate
@@ -182,48 +201,13 @@ akfin.calcUnscaledZCs<-function(maxYear=2019,
   
   return(dfrZCs);
 }
+# dirData="~/Work/StockAssessments-Crab/Data/Fisheries/Fishery.AKFIN/Current";
 # fnHisZCs="GroundfishFisheries.HistoricalZCs.LongFormat.TannerCrab.csv";
 # fnHisZCs=file.path(dirData,fnHisZCs);
 # fnNORPAC="FromAKFIN.TannerCrab.norpac_length_report.csv";
 # fnNORPAC=file.path(dirData,fnNORPAC);
-# dfrZCs.onYGAXZ<-akfin.calcUnscaledZCs(fnHisZCs,fnNORPAC);
-
-#'
-#' @title Calculate estimated total bycatch abundance and biomass of Tanner crab in groundfish fisheries
-#'
-#' @description Function to calculate estimated total catch abundance by expanding observed abundance.
-#'
-#' @param dfrZCs - filename for size composition estimates (numbers of crab) from "historical data" (pre-CAS)
-#' @param ss_scl - filename for size data (numbers of crab) from a NORPAC length report file
-#' @param ss_max - integer flag for diagnostic printout (0,1,2)
-#'
-#' @return tibble with columns
-#'
-#' @details Uses \code{sqldf::sqldf}. Units for 'weight' are kg, for 'abundance' are thousands, and for 'biomass' are t.
-#' Historical (foreign, joint veture) data runs 1973-1990. CAS data is used for 1991-2008. CIA data is used for
-#' 2009+.
-#'
-#' @import magrittr
-#' @import dplyr
-#' 
-#' @importFrom sqldf sqldf
-#' @importFrom wtsSizeComps calcSampleSizes
-#'
-#' @export
-#'
-akfin.calcInputSSsForTCSAM<-function(dfrZCs,
-                                     ss_scl,
-                                     sss_max = 200){
-  #--calculate and scale sample sizes
-  dfrSSs<-wtsSizeComps::calcSampleSizes(dfrZCs,
-                                        id.value="N",
-                                        id.facs=c("year","gear","sex"));
-  dfrISSs<-akfin.ScaleInputSSs(dfrSSs,ss_scl=ss_scl,ss_max=ss_max);
-  return(dfrSSs);
-}
-# dfrSSs.onYGAX<-akfin.calcInputSSsForTCSAM(dfrZCs.onYGAXZ,
-#                                           ss_scl=ss_scl,
-#                                           ss_max=ss_max);
+# dfrZCs.onYGAXZ<-akfin.calcUnscaledZCs(fnHisZCs=fnHisZCs,
+#                                       fnNORPAC=fnNORPAC);
 
 #' @title Calculate estimated total bycatch abundance and biomass of Tanner crab in groundfish fisheries
 #'
@@ -231,22 +215,31 @@ akfin.calcInputSSsForTCSAM<-function(dfrZCs,
 #'
 #' @param dfrABs.YGAT - dataframe with total abundance by YGAT
 #' @param dfrZCs.onYGAXZ - dataframe with "raw" number size compositions by YGAX
+#' @param cutpts - cutpts for scale size compositions (default is 25->185 by 5)
+#' @param truncate.low -flag to truncate counts/abundance below the minimum size or include in first size bin (FALSE)
+#' @param truncate.high - flag to truncate counts/abundance above the maximum size (TRUE) or include in final size bin (FALSE)
 #'
-#' @return tibble with columns
+#' @return tibble with columns 'year','gear','area','sex','maturity','shell condition','size','N'
 #'
-#' @details Uses \code{sqldf::sqldf}. Units for 'weight' are kg, for 'abundance' are thousands, and for 'biomass' are t.
-#' Historical (foreign, joint veture) data runs 1973-1990. CAS data is used for 1991-2008. CIA data is used for
-#' 2009+.
+#' @details Estimated total annual bycatch abundance from the CAS and CIA databases (as a tibble from 
+#' \code{akfin.calcBycatchABs}) is used to scale unscaled size compositions (a tibble from \code{akfin.calcUnscaledZCs})
+#' for years in which such exists. For years in which total bycatch abundance is not available, the size
+#' compositions are not scaled.
 #'
 #' @import magrittr
 #' @import dplyr
 #' 
 #' @importFrom sqldf sqldf
+#' @importFrom wtsSizeComps rebinSizeComps
+#' @importFrom wtsUtilities Sum
 #'
 #' @export
 #'
 akfin.ScaleZCs<-function(dfrABs.YGAT,
-                         dfrZCs.onYGAXZ){
+                         dfrZCs.onYGAXZ,
+                         cutpts=seq(25,185,5),
+                         truncate.low=TRUE,
+                         truncate.high=FALSE){
   Sum<-wtsUtilities::Sum;
   #----calculate total observed numbers by year, gear, and area
   dfrONs.YGA<-dfrZCs.onYGAXZ %>%
@@ -287,12 +280,6 @@ akfin.ScaleZCs<-function(dfrABs.YGAT,
                   dplyr::ungroup();
   dfrTNs.YG<-cbind(dfrTNs.YG,estNumTotP=dfrTNs.YGp$estNumTotP);
   dfrTNs.YG<-dfrTNs.YG %>% dplyr::mutate(xfac=estNumTot/estNumTotP);
-  # dfr.enYG<-reshape2::dcast(dfr.enYGA,year+gear~.,fun.aggregate=Sum,value.var="num");
-  # names(dfr.enYG)[3]<-"estNumTot";
-  # dfr.enYGp<-reshape2::dcast(dfr.xfYGA,year+gear~.,fun.aggregate=Sum,value.var="estNum");
-  # names(dfr.enYGp)[3]<-"estNumTotP";
-  # dfr.enYG<-cbind(dfr.enYG,estNumTotP=dfr.enYGp$estNumTotP);
-  # dfr.enYG$xfac<-dfr.enYG$estNumTot/dfr.enYG$estNumTotP;
 
   ont<-dfrXFs.YGA;
   ent<-dfrTNs.YG;
@@ -330,9 +317,14 @@ akfin.ScaleZCs<-function(dfrABs.YGAT,
   
   #check on calculations
   dfrA1s.YG = dfrZCs.tnYGAXZ %>% 
-                dplyr::group_by(year,gear) %>% dplyr::summarize(totNum1=Sum(N));
-  dfrA2s.YG = dfrABs.YGAT %>% subset(year>=1991) %>%
-                dplyr::group_by(year,gear) %>% dplyr::summarize(totNum2=Sum(num));
+                dplyr::group_by(year,gear) %>% 
+                dplyr::summarize(totNum1=Sum(N)) %>%
+                dplyr::ungroup();
+  dfrA2s.YG = dfrABs.YGAT %>% 
+                subset(year>=1991) %>%
+                dplyr::group_by(year,gear) %>% 
+                dplyr::summarize(totNum2=Sum(num)) %>%
+                dplyr::ungroup();
   idx<-abs((dfrA1s.YG$totNum1-dfrA2s.YG$totNum2)/(dfrA1s.YG$totNum1+dfrA2s.YG$totNum2))>0.0001;
   if (sum(idx)>0) {
     msg<-paste0("Problem with expansion of size comps!\n")
@@ -349,6 +341,19 @@ akfin.ScaleZCs<-function(dfrABs.YGAT,
   dfrZCs<-rbind(dfrZCs.onYGAXZ %>% subset(year %in% uY1not2s),
                 dfrZCs.tnYGAXZ);
   
+  #--re-bin size comps to output cutpts
+  dfrZCs<-wtsSizeComps::rebinSizeComps(dfrZCs,
+                                      id.size="size",
+                                      id.value="N",
+                                      id.facs=c("year","gear","sex","maturity","shell condition"),
+                                      cutpts=cutpts,
+                                      truncate.low=truncate.low,
+                                      truncate.high=truncate.high);
   return(dfrZCs);
 }
+# dfrZCs.tnYGAXZ<-akfin.ScaleZCs(dfrABs.YGAT,
+#                                dfrZCs.onYGAXZ,
+#                                cutpts=seq(25,185,5),
+#                                truncate.low=TRUE,
+#                                truncate.high=FALSE);
 

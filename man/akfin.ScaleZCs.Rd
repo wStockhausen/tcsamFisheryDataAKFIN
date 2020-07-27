@@ -4,21 +4,34 @@
 \alias{akfin.ScaleZCs}
 \title{Calculate estimated total bycatch abundance and biomass of Tanner crab in groundfish fisheries}
 \usage{
-akfin.ScaleZCs(dfrABs.YGAT, dfrZCs.onYGAXZ)
+akfin.ScaleZCs(
+  dfrABs.YGAT,
+  dfrZCs.onYGAXZ,
+  cutpts = seq(25, 185, 5),
+  truncate.low = TRUE,
+  truncate.high = FALSE
+)
 }
 \arguments{
 \item{dfrABs.YGAT}{- dataframe with total abundance by YGAT}
 
 \item{dfrZCs.onYGAXZ}{- dataframe with "raw" number size compositions by YGAX}
+
+\item{cutpts}{- cutpts for scale size compositions (default is 25->185 by 5)}
+
+\item{truncate.low}{-flag to truncate counts/abundance below the minimum size or include in first size bin (FALSE)}
+
+\item{truncate.high}{- flag to truncate counts/abundance above the maximum size (TRUE) or include in final size bin (FALSE)}
 }
 \value{
-tibble with columns
+tibble with columns 'year','gear','area','sex','maturity','shell condition','size','N'
 }
 \description{
 Function to calculate estimated total catch abundance by expanding observed abundance.
 }
 \details{
-Uses \code{sqldf::sqldf}. Units for 'weight' are kg, for 'abundance' are thousands, and for 'biomass' are t.
-Historical (foreign, joint veture) data runs 1973-1990. CAS data is used for 1991-2008. CIA data is used for
-2009+.
+Estimated total annual bycatch abundance from the CAS and CIA databases (as a tibble from 
+\code{akfin.calcBycatchABs}) is used to scale unscaled size compositions (a tibble from \code{akfin.calcUnscaledZCs})
+for years in which such exists. For years in which total bycatch abundance is not available, the size
+compositions are not scaled.
 }

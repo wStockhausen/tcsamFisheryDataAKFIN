@@ -20,16 +20,20 @@
 #' \item{dfrZCs.tnYGAXZ - total catch (if possible) size compositions by YGAXZ}
 #' }
 #'
-#' @details Historical (foreign, joint veture) biomass data runs 1973-1990 (no abundance data 
+#' @details Historical (foreign, joint venture) biomass data runs 1973-1990 (no abundance data 
 #' is available during this time period). CAS data is used for 1991-2008. CIA data is used for
 #' 2009+. Historical size composition data runs 1973-1990. NORPAC size composition data starts
 #' (effectively) in 1986, but is used here starting in 1991. 
+#' 
+#' @note Abundance is in number of crab, biomass in kg.
+#' 
+#' @importFrom wtsSizeComps calcSampleSizes
 #'
 #' @export
 #'
 akfin.calcCatchTables<-function(maxYear=2019,
                                 dirData="~/Work/StockAssessments-Crab/Data/Fisheries/Fishery.AKFIN/Current",
-                                fnHisABs="GroundfishFisheries.HistoricalABss.TannerCrab.csv",
+                                fnHisABs="GroundfishFisheries.HistoricalABs.TannerCrab.csv",
                                 fnCAS="FromAKFIN.TannerCrab.BycatchEstimates.CAS.csv",
                                 fnCIA="FromAKFIN.TannerCrab.BycatchEstimates.CIA.csv",
                                 fnHisZCs="GroundfishFisheries.HistoricalZCs.LongFormat.TannerCrab.csv",
@@ -46,8 +50,13 @@ akfin.calcCatchTables<-function(maxYear=2019,
                                     verbosity=verbosity);
   
   #--Calculate "raw" size compositions
-  dfrZCs.onYGAXZ<-akfin.calcUnscaledZCs(fnHisZCs=file.path(dirData,fnHisZCs),
-                                        fnNORPAC=file.path(dirData,fnNORPAC));
+  dfrZCs.onYGAXZ<-akfin.calcUnscaledZCs(maxYear=maxYear,
+                                        fnHisZCs=file.path(dirData,fnHisZCs),
+                                        fnNORPAC=file.path(dirData,fnNORPAC),
+                                        id.facs = c("year", "gear", "area", "sex"),
+                                        cutpts = seq(25, 185, 5),
+                                        truncate.low = TRUE,
+                                        truncate.high = FALSE);
 
   #--calculate observed sample sizes
   dfrSSs.YGAX<-wtsSizeComps::calcSampleSizes(dfrZCs.onYGAXZ,

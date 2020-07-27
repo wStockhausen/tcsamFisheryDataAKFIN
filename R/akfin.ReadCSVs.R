@@ -1,25 +1,16 @@
 #'
-#' @title Calculate estimated total bycatch abundance and biomass of Tanner crab in groundfish fisheries
+#' @title Read a csv file from AKFIN with CIA (Catch-in-Areas) data
 #'
-#' @description Function to calculate estimated total catch abundance by expanding observed abundance.
+#' @description Function to read a csv file from AKFIN with CIA (Catch-in-Areas) data.
 #'
-#' @param fn - filename for bycatch estimates from Catch-In_Areas database
+#' @param fn - filename for bycatch estimates from the Catch-in-Areas database
 #' @param minYear - min fishery year to extract
 #'
-#' @return tibble with columns
-#'  * fishery
-#'  * area
-#'  * year
-#'  * expFactor - expansion factor
-#'  * sex - "male", "female", "undetermined", "hermaphrodite", or NA
-#'  * variable - "count", "weight", "abundance", or "biomass"
-#'  * value - value of associated variable
-#'  * type - "observed" or "expanded"
-#'  * units - "ones", "thousands", "kg" or "t"
+#' @return tibble with columns "year","target","gear code","adfg stat area","nmfs stat area",
+#' "haul count","biomass","number","conf flag","vessel count", and "gear". Units for biomass
+#' and number are kg and one's (i.e., unscaled number of crab).
 #'
-#' @details Uses \code{sqldf::sqldf}. Units for 'weight' are kg, for 'abundance' are thousands, and for 'biomass' are t.
-#' Historical (foreign, joint veture) data runs 1973-1990. CAS data is used for 1991-2008. CIA data is used for
-#' 2009+.
+#' @details CIA data begins in 2009.
 #'
 #' @import magrittr
 #' 
@@ -43,31 +34,26 @@ akfin.ReadCSV.CIA<-function(fn,
   tblCIA<-tmp1 %>% subset(minYear<=year);
   return(tblCIA);
 }
+# dirData<-"~/Work/StockAssessments-Crab/Data/Fisheries/Fishery.AKFIN/Current";
+# fn<-file.path(dirData,"FromAKFIN.TannerCrab.BycatchEstimates.CIA.csv");
+# tbl<-akfin.ReadCSV.CIA(fn);
 
 #'
-#' @title Calculate estimated total bycatch abundance and biomass of Tanner crab in groundfish fisheries
+#' @title Read a csv file from AKFIN with CAS (Catch Accounting System) data
 #'
-#' @description Function to calculate estimated total catch abundance by expanding observed abundance.
+#' @description Function to read a csv file from AKFIN with CAS (Catch Accounting System) data.
 #'
-#' @param fn - filename for bycatch estimates from Catch Accounting System database
-#' @param bycatch_species_code - code for bycatch species (default="BTCR")
+#' @param fn - filename for bycatch estimates from the Catch Accounting System database
+#' @param bycatch_species_code - FMA species code (default = "BTCR", for bairdi Tanner crab)
 #' @param minYear - min fishery year to extract
 #'
-#' @return tibble with columns
-#'  * fishery
-#'  * area
-#'  * year
-#'  * expFactor - expansion factor
-#'  * sex - "male", "female", "undetermined", "hermaphrodite", or NA
-#'  * variable - "count", "weight", "abundance", or "biomass"
-#'  * value - value of associated variable
-#'  * type - "observed" or "expanded"
-#'  * units - "ones", "thousands", "kg" or "t"
+#' @return tibble with columns "year","gear","area","target","num",and "wgt". 
+#' Units for biomass (\code{wgt}) and number (\code{num}) are kg and one's (i.e., unscaled number of crab).
 #'
-#' @details Uses \code{sqldf::sqldf}. Units for 'weight' are kg, for 'abundance' are thousands, and for 'biomass' are t.
-#' Historical (foreign, joint veture) data runs 1973-1990. CAS data is used for 1991-2008. CIA data is used for
-#' 2009+.
+#' @details Valid CAS data begins in 1991 and ends in 2009 (it overlaps with the CIA database a bit)
 #'
+#' @import magrittr
+#' 
 #' @importFrom readr read_csv
 #'
 #' @export
@@ -89,26 +75,16 @@ akfin.ReadCSV.CAS<-function(fn,
 }
 
 #'
-#' @title Calculate estimated total bycatch abundance and biomass of Tanner crab in groundfish fisheries
+#' @title Read a csv file from AKFIN with NORPAC length report data
 #'
-#' @description Function to calculate estimated total catch abundance by expanding observed abundance.
+#' @description Function to read a csv file from AKFIN with NORPAC length report data.
 #'
-#' @param fn - filename for szie data from a NORPAC length report file
+#' @param fn - filename for size composition data from the NORPAC database
 #'
-#' @return tibble with columns
-#'  * fishery
-#'  * area
-#'  * year
-#'  * expFactor - expansion factor
-#'  * sex - "male", "female", "undetermined", "hermaphrodite", or NA
-#'  * variable - "count", "weight", "abundance", or "biomass"
-#'  * value - value of associated variable
-#'  * type - "observed" or "expanded"
-#'  * units - "ones", "thousands", "kg" or "t"
+#' @return tibble with columns "year","gear","area","sex","size",and "N". 
+#' Units for N are counts (one's) of sampled crab..
 #'
-#' @details Uses \code{sqldf::sqldf}. Units for 'weight' are kg, for 'abundance' are thousands, and for 'biomass' are t.
-#' Historical (foreign, joint veture) data runs 1973-1990. CAS data is used for 1991-2008. CIA data is used for
-#' 2009+.
+#' @details Valid NORPAC data begins in 1986, but is typically used starting in 1991, to the present.
 #'
 #' @importFrom readr read_csv
 #'

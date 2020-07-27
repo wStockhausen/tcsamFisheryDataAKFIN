@@ -7,7 +7,7 @@
 akfin.calcCatchTables(
   maxYear = 2019,
   dirData = "~/Work/StockAssessments-Crab/Data/Fisheries/Fishery.AKFIN/Current",
-  fnHisABs = "GroundfishFisheries.HistoricalABss.TannerCrab.csv",
+  fnHisABs = "GroundfishFisheries.HistoricalABs.TannerCrab.csv",
   fnCAS = "FromAKFIN.TannerCrab.BycatchEstimates.CAS.csv",
   fnCIA = "FromAKFIN.TannerCrab.BycatchEstimates.CIA.csv",
   fnHisZCs = "GroundfishFisheries.HistoricalZCs.LongFormat.TannerCrab.csv",
@@ -45,8 +45,11 @@ list with the following tibbles: \cr
 Function to calculate bycatch tables for Tanner crab in groundfish fisheries.
 }
 \details{
-Historical (foreign, joint veture) biomass data runs 1973-1990 (no abundance data 
+Historical (foreign, joint venture) biomass data runs 1973-1990 (no abundance data 
 is available during this time period). CAS data is used for 1991-2008. CIA data is used for
 2009+. Historical size composition data runs 1973-1990. NORPAC size composition data starts
 (effectively) in 1986, but is used here starting in 1991.
+}
+\note{
+Abundance is in number of crab, biomass in kg.
 }

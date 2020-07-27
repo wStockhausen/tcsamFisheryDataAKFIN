@@ -7,7 +7,7 @@
 akfin.GetGearConversions()
 }
 \value{
-dataframe with columns
+dataframe with columns 'type', 'code', and 'description'
 }
 \description{
 Function to create dataframe describing gear conversions.

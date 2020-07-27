@@ -3,7 +3,7 @@
 #'
 #' @description Function to create dataframe describing gear conversions.
 #'
-#' @return dataframe with columns
+#' @return dataframe with columns 'type', 'code', and 'description'
 #'
 #' @details None.
 #'
@@ -28,9 +28,10 @@ akfin.GetGearConversions<-function(){
 #' 
 #' @param x - vector of gear descriptions to convert to gear types
 #'
-#' @return dataframe with columns
+#' @return character vector with same length as x
 #'
-#' @details None.
+#' @details Uses conversions from \code{description} to \code{type} 
+#' defined by \code{akfin.GetGearConversions}.
 #'
 #' @export
 #'
@@ -46,13 +47,16 @@ akfin.ConvertGearDescToType<-function(x){
 }
 
 #'
-#' @title Create dataframe describing gear conversions
+#' @title Convert gear codes to gear types
 #'
-#' @description Function to create dataframe describing gear conversions.
+#' @description Function to convert gear codes to gear types.
+#' 
+#' @param x - vector of gear codes to convert to gear types
 #'
 #' @return character vector with same length as x
 #'
-#' @details None.
+#' @details Uses conversions from \code{code} to \code{type} 
+#' defined by \code{akfin.GetGearConversions}.
 #'
 #' @export
 #'
@@ -72,7 +76,7 @@ akfin.ConvertGearCodeToType<-function(x){
 #'
 #' @description Function to create dataframe describing sex conversions.
 #'
-#' @return dataframe with columns
+#' @return dataframe with columns 'sex' and 'code'.
 #'
 #' @details None.
 #'
@@ -95,7 +99,8 @@ akfin.GetSexConversions<-function(){
 #'
 #' @return character vector with same length as x
 #'
-#' @details None.
+#' @details Uses conversions from \code{code} to \code{sex} 
+#' defined by \code{akfin.GetSexConversions}.
 #'
 #' @export
 #'

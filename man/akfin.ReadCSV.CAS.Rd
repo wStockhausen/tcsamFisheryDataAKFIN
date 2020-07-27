@@ -2,34 +2,24 @@
 % Please edit documentation in R/akfin.ReadCSVs.R
 \name{akfin.ReadCSV.CAS}
 \alias{akfin.ReadCSV.CAS}
-\title{Calculate estimated total bycatch abundance and biomass of Tanner crab in groundfish fisheries}
+\title{Read a csv file from AKFIN with CAS (Catch Accounting System) data}
 \usage{
 akfin.ReadCSV.CAS(fn, bycatch_species_code = "BTCR", minYear = 1991)
 }
 \arguments{
-\item{fn}{- filename for bycatch estimates from Catch Accounting System database}
+\item{fn}{- filename for bycatch estimates from the Catch Accounting System database}
 
-\item{bycatch_species_code}{- code for bycatch species (default="BTCR")}
+\item{bycatch_species_code}{- FMA species code (default = "BTCR", for bairdi Tanner crab)}
 
 \item{minYear}{- min fishery year to extract}
 }
 \value{
-tibble with columns
- * fishery
- * area
- * year
- * expFactor - expansion factor
- * sex - "male", "female", "undetermined", "hermaphrodite", or NA
- * variable - "count", "weight", "abundance", or "biomass"
- * value - value of associated variable
- * type - "observed" or "expanded"
- * units - "ones", "thousands", "kg" or "t"
+tibble with columns "year","gear","area","target","num",and "wgt". 
+Units for biomass (\code{wgt}) and number (\code{num}) are kg and one's (i.e., unscaled number of crab).
 }
 \description{
-Function to calculate estimated total catch abundance by expanding observed abundance.
+Function to read a csv file from AKFIN with CAS (Catch Accounting System) data.
 }
 \details{
-Uses \code{sqldf::sqldf}. Units for 'weight' are kg, for 'abundance' are thousands, and for 'biomass' are t.
-Historical (foreign, joint veture) data runs 1973-1990. CAS data is used for 1991-2008. CIA data is used for
-2009+.
+Valid CAS data begins in 1991 and ends in 2009 (it overlaps with the CIA database a bit)
 }

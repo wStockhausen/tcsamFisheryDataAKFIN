@@ -8,18 +8,16 @@ akfinWrite_TCSAMInputFile(
   fishery = NULL,
   gear = "all",
   fn = "",
-  closed = NULL,
   dfrTC_ABs = NULL,
   dfrTC_ZCs = NULL,
   dfrTC_SSs = NULL,
-  dfrEffort = NULL,
   cutpts = NULL,
-  ss_factor = 1,
-  ss_max = 200,
   likeTC = "NORM2",
   cvTC = 0.2,
   minErrTCa = 2000,
   minErrTCb = 2000,
+  wgtTCa = 0,
+  wgtTCb = 20,
   unitsBiomass = "THOUSANDS_MT"
 )
 }
@@ -30,8 +28,6 @@ akfinWrite_TCSAMInputFile(
 
 \item{fn}{- output file name (default writes to stdout)}
 
-\item{closed}{- vector of years when fishery was closed}
-
 \item{dfrTC_ABs}{- dataframe with total bycatch abundance/biomass data}
 
 \item{dfrTC_ZCs}{- dataframe with total bycatch size composition data}
@@ -40,10 +36,6 @@ akfinWrite_TCSAMInputFile(
 
 \item{cutpts}{- vector with cutpts used for size comps}
 
-\item{ss_factor}{- sample size scaling factor (from retained catch analysis)}
-
-\item{ss_max}{- max for sample sizes (default=200)}
-
 \item{likeTC}{- likelihood type for total bycatch ABs ("NORM2","NORMAL", or "LOGNORMAL")}
 
 \item{cvTC}{- cv for total bycatch above min error (default=0.20)}
@@ -51,6 +43,10 @@ akfinWrite_TCSAMInputFile(
 \item{minErrTCa}{- min error in total bycatch abundance (default=2000)}
 
 \item{minErrTCb}{- min error in total bycatch biomass   (default=2000 kg)}
+
+\item{wgtTCa}{- likelihood multiplier for total catch abundance}
+
+\item{wgtTCb}{- likelihood multiplier for total catch biomass}
 
 \item{unitsBiomass}{- units for output biomass ("THOUSANDS_MT" [default],"MILLIONS_LBS","KG")}
 }
@@ -61,5 +57,9 @@ null
 Function to write AKFIN data for crab bycatch to a TCSAM input file.
 }
 \details{
-None
+Input data scales are assumed to be:
+\itemize{
+ \item{abundance - numbers of crab}
+ \item{biomass - kg}
+}
 }

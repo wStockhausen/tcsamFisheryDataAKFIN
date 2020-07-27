@@ -2,30 +2,20 @@
 % Please edit documentation in R/akfin.ReadCSVs.R
 \name{akfin.ReadCSV.NorpacLengthReport}
 \alias{akfin.ReadCSV.NorpacLengthReport}
-\title{Calculate estimated total bycatch abundance and biomass of Tanner crab in groundfish fisheries}
+\title{Read a csv file from AKFIN with NORPAC length report data}
 \usage{
 akfin.ReadCSV.NorpacLengthReport(fn)
 }
 \arguments{
-\item{fn}{- filename for szie data from a NORPAC length report file}
+\item{fn}{- filename for size composition data from the NORPAC database}
 }
 \value{
-tibble with columns
- * fishery
- * area
- * year
- * expFactor - expansion factor
- * sex - "male", "female", "undetermined", "hermaphrodite", or NA
- * variable - "count", "weight", "abundance", or "biomass"
- * value - value of associated variable
- * type - "observed" or "expanded"
- * units - "ones", "thousands", "kg" or "t"
+tibble with columns "year","gear","area","sex","size",and "N". 
+Units for N are counts (one's) of sampled crab..
 }
 \description{
-Function to calculate estimated total catch abundance by expanding observed abundance.
+Function to read a csv file from AKFIN with NORPAC length report data.
 }
 \details{
-Uses \code{sqldf::sqldf}. Units for 'weight' are kg, for 'abundance' are thousands, and for 'biomass' are t.
-Historical (foreign, joint veture) data runs 1973-1990. CAS data is used for 1991-2008. CIA data is used for
-2009+.
+Valid NORPAC data begins in 1986, but is typically used starting in 1991, to the present.
 }

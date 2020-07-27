@@ -7,7 +7,7 @@
 akfin.GetSexConversions()
 }
 \value{
-dataframe with columns
+dataframe with columns 'sex' and 'code'.
 }
 \description{
 Function to create dataframe describing sex conversions.

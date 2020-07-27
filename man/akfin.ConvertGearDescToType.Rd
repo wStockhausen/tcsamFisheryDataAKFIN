@@ -10,11 +10,12 @@ akfin.ConvertGearDescToType(x)
 \item{x}{- vector of gear descriptions to convert to gear types}
 }
 \value{
-dataframe with columns
+character vector with same length as x
 }
 \description{
 Function to convert gear descriptions to gear types.
 }
 \details{
-None.
+Uses conversions from \code{description} to \code{type} 
+defined by \code{akfin.GetGearConversions}.
 }

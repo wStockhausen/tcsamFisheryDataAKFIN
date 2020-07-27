@@ -4,8 +4,8 @@
 #' @description Function to calculate the "input" sample sizes to TCSAM02 for AKFIN size composition data.
 #'
 #' @param dfrSS - dataframe with original sample sizes (see details)
-#' @param ss_scl - scale factor for sample sizes from \code{adfg.calcScaleFactorForInputSSs}
-#' @param ss_max - maximum input sample size allowed
+#' @param .ss_scl - scale factor for sample sizes from \code{adfg.calcScaleFactorForInputSSs}
+#' @param .ss_max - maximum input sample size allowed
 #'
 #' @return dataframe or tibble with the same column order as the input, but with
 #' additional columns \code{ss_tot} and \code{ss_scl}. Column \code{ss} contains the scaled
@@ -21,30 +21,29 @@
 #' @note \code{dfrSS} should have (at least) the columns
 #' \itemize{
 #'   \item{year}
-#'   \item{sex}
 #'   \item{ss}
 #' }
 #'
 #' @note  \code{dfrSS} should include sample sizes for only a single fishery or survey.
 #'
-#' @importFrom dplyr group_by
-#' @importFrom dplyr mutate
-#' @importFrom dplyr relocate
-#' @importFrom dplyr summarize
+#' @import dplyr
+#' 
+#' @importFrom tidyselect any_of
 #' @importFrom wtsUtilities Sum
 #'
 #' @export
 #'
 akfin.ScaleInputSSs<-function(dfrSS,
-                              ss_scl,
-                              ss_max=200){
-  #--calculate scaled sample size for total sample size by year and sex
+                              .ss_scl,
+                              .ss_max=200){
+  #--calculate scaled sample size for total sample size by year
   dfrSSp<-dfrSS %>%
            dplyr::group_by(year) %>%
            dplyr::summarize(ss_tot=wtsUtilities::Sum(ss)) %>%
-           dplyr::mutate(ss_scl=ss_max*(ss_tot/ss_scl)) %>%
+           dplyr::mutate(ss_scl=.ss_max*(ss_tot/.ss_scl)) %>%
            dplyr::group_by(year) %>%
-           dplyr::mutate(ss_scl=min(ss_max,ss_scl));
+           dplyr::mutate(ss_scl=min(ss_max,ss_scl)) %>%
+           dplyr::ungroup();
   #--apportion scaled sample sizes by year, sex and other factors
   dfrSSs_inp<-dfrSS %>%
                  dplyr::inner_join(dfrSSp,by=c("year")) %>%

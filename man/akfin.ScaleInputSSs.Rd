@@ -4,14 +4,14 @@
 \alias{akfin.ScaleInputSSs}
 \title{Calculate the "input" sample sizes to TCSAM02 for AKFIN size composition data}
 \usage{
-akfin.ScaleInputSSs(dfrSS, ss_scl, ss_max = 200)
+akfin.ScaleInputSSs(dfrSS, .ss_scl, .ss_max = 200)
 }
 \arguments{
 \item{dfrSS}{- dataframe with original sample sizes (see details)}
 
-\item{ss_scl}{- scale factor for sample sizes from \code{adfg.calcScaleFactorForInputSSs}}
+\item{.ss_scl}{- scale factor for sample sizes from \code{adfg.calcScaleFactorForInputSSs}}
 
-\item{ss_max}{- maximum input sample size allowed}
+\item{.ss_max}{- maximum input sample size allowed}
 }
 \value{
 dataframe or tibble with the same column order as the input, but with
@@ -33,7 +33,6 @@ combination and \code{ss_tot} is the total sample size by year and sex.
 \code{dfrSS} should have (at least) the columns
 \itemize{
   \item{year}
-  \item{sex}
   \item{ss}
 }
 
