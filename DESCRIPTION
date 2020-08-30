@@ -1,8 +1,8 @@
 Package: tcsamFisheryDataAKFIN
 Type: Package
 Title: Functions to process AKFIN data for crab bycatch
-Version: 2020.07.27
-Date: 2019-07-27
+Version: 2020.08.29
+Date: 2019-08-29
 Author: William Stockhausen
 Maintainer: William Stockhausen <william.stockhausen@noaa.gov>
 Description: Provides a set of functions to convert AKFIN data for crab bycatch to TCSAM02-compatible formats.

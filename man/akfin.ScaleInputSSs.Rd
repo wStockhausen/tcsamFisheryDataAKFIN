@@ -15,9 +15,9 @@ akfin.ScaleInputSSs(dfrSS, .ss_scl, .ss_max = 200)
 }
 \value{
 dataframe or tibble with the same column order as the input, but with
-additional columns \code{ss_tot} and \code{ss_scl}. Column \code{ss} contains the scaled
+additional columns \code{ss_orig}, \code{ss_tot}, and \code{ss_scl}. Column \code{ss} contains the scaled
 sample sizes, column \code{ss_scl} contains the scale used to convert the original
-sample sizes.
+sample sizes, and column \code{ss_orig} contains the original sample sizes.
 }
 \description{
 Function to calculate the "input" sample sizes to TCSAM02 for AKFIN size composition data.
@@ -25,9 +25,9 @@ Function to calculate the "input" sample sizes to TCSAM02 for AKFIN size composi
 \details{
 The scale factor \code{ss_scl} and max input sample size \code{ss_max} are
 used to determine input annual sample sizes for size composition data using the formula \cr
-             \code{inp_ss = min(max_ss,max_ss*(ss_tot/scs_scl))*ss/ss_tot} \cr
+             \code{inp_ss = min(max_ss,max_ss\*(ss_tot/ss_scl)\*(ss/ss_tot)} \cr
 where \code{ss} is the original sample size (the total number of crab measured) by factor
-combination and \code{ss_tot} is the total sample size by year and sex.
+combination and \code{ss_tot} is the total sample size by year.
 }
 \note{
 \code{dfrSS} should have (at least) the columns
