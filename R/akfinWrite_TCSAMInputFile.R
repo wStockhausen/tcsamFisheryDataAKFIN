@@ -16,6 +16,7 @@
 #' @param minErrTCb - min error in total bycatch biomass   (default=2000 kg)
 #' @param wgtTCa - likelihood multiplier for total catch abundance
 #' @param wgtTCb - likelihood multiplier for total catch biomass
+#' @param unitsAbundance - units for output abundance ("MILLIONS" [default],"ONES")
 #' @param unitsBiomass - units for output biomass ("THOUSANDS_MT" [default],"MILLIONS_LBS","KG")
 #'
 #' @return null
@@ -43,10 +44,22 @@ akfinWrite_TCSAMInputFile<-function(fishery=NULL,
                                     minErrTCb=2000,
                                     wgtTCa=0,
                                     wgtTCb=20,
+                                    unitsAbundance="MILLIONS",
                                     unitsBiomass="THOUSANDS_MT"){
   #--SCALE CONSTANTS
   MILLIONS<-1000000;     #scale to convert to millions
   LBStoKG <- 0.45359237; #multiplicative factor to get kg from lbs
+  #--determine scaling for output abundance (input in 1's)
+  if (unitsAbundance=="MILLIONS") {
+    sclA <- 1.0/MILLIONS;
+  } else if (unitsBiomass=="ONES") {
+    sclA <- 1.0;
+  } else {
+    msg<-paste0("\nERROR in adfgWrite_TCSAMInputFile.",
+                "\ninput value for unitsAbundance ('",unitsAbundance,"') is invalid.",
+                "\nValid values are 'ONES','MILLIONS'.\n");
+    stop(msg);
+  }
   #--determine scaling for output biomass (input in kg)
   if (unitsBiomass=="THOUSANDS_MT") {
     sclB <- 1.0/MILLIONS;
@@ -108,14 +121,14 @@ akfinWrite_TCSAMInputFile<-function(fishery=NULL,
     cat(likeTC,"                 #likelihood type\n",file=con);
     cat(wgtTCa,"                 #likelihood weight\n",file=con);
     cat(nrow(dfrp),"             #number of years\n",file=con,sep='');
-    cat("ONES   		             #units, bycatch abundance\n",file=con);
+    cat(unitsAbundance,"         #units, bycatch abundance\n",file=con);
     cat("1		#number of factor combinations\n",file=con);
     cat("ALL_SEX  ALL_MATURITY  ALL_SHELL\n",file=con);
     cat("#year    number    cv\n",file=con);
     for (rw in 1:nrow(dfrp)){
       val<-dfrp$num[rw];#--catch in numbers of crab
       cv<-max(cvTC,minErrTCa/val);#--effective cv
-      cat(dfrp$year[rw],val,cv,"\n",sep="    ",file=con);
+      cat(dfrp$year[rw],val*sclA,cv,"\n",sep="    ",file=con);
     }
     rm(rw,val,cv,dfrp);
 

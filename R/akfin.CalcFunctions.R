@@ -48,9 +48,9 @@ akfin.calcBycatchABs<-function(maxYear=2019,
   verbose<-(verbosity>0);
   
   #gear conversions
-  dfr.gear<-akfin.GetGearConversions();
+  dfr.gear<-akfinGet_GearConversions();
   #sex conversions
-  dfr.sex<-akfin.GetSexConversions();
+  dfr.sex<-akfinGet_SexConversions();
 
   Sum<-wtsUtilities::Sum;#sum function with na.rm=TRUE
 
@@ -68,13 +68,13 @@ akfin.calcBycatchABs<-function(maxYear=2019,
   rm(tmp);
   
   #----process estimated bycatch numbers and weight by year, gear, and area from CAS/Blend database
-  tmp<-akfin.ReadCSV.CAS(fnCAS);
+  tmp<-akfinRead_CAS(fnCAS);
   dfrCAS<-tmp %>% subset((mnYrCAS<=year)&(year<mnYrCIA));
   #------num values are in one's, wgt values in kg
   rm(tmp);
   
   #----process estimated bycatch numbers and weight by year, gear, area, and target from catch-in-areas (CIA) database
-  tblCIA <-akfin.ReadCSV.CIA(fnCIA);
+  tblCIA <-akfinRead_CIA(fnCIA);
   #----aggregate by year, gear, nmfs stat area, target across ADFG stat areas
   query<-"select
             year, gear, `nmfs stat area`, target,
@@ -169,7 +169,7 @@ akfin.calcUnscaledZCs<-function(maxYear=2019,
   dfrZCs.NLR<-NULL;
   if (!is.null(fnNORPAC)){
     #--read recent NORPAC length report file
-    tblNLR<-akfin.ReadCSV.NorpacLengthReport(fnNORPAC);
+    tblNLR<-akfinRead_NorpacLengthReport(fnNORPAC);
     
     #--keep minYr on, drop "unidentified" sex
     minYr = ifelse(!is.null(dfrZCs.HIS),1991,1986);

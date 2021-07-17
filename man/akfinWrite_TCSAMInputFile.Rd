@@ -18,6 +18,7 @@ akfinWrite_TCSAMInputFile(
   minErrTCb = 2000,
   wgtTCa = 0,
   wgtTCb = 20,
+  unitsAbundance = "MILLIONS",
   unitsBiomass = "THOUSANDS_MT"
 )
 }
@@ -47,6 +48,8 @@ akfinWrite_TCSAMInputFile(
 \item{wgtTCa}{- likelihood multiplier for total catch abundance}
 
 \item{wgtTCb}{- likelihood multiplier for total catch biomass}
+
+\item{unitsAbundance}{- units for output abundance ("MILLIONS" [default],"ONES")}
 
 \item{unitsBiomass}{- units for output biomass ("THOUSANDS_MT" [default],"MILLIONS_LBS","KG")}
 }
