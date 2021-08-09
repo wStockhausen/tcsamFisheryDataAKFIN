@@ -9,8 +9,8 @@
 #' @return tibble with columns "year","target","gear code","adfg stat area","nmfs stat area",
 #' "haul count","biomass","number","conf flag","vessel count", and "gear". Units for biomass
 #' and number are kg and one's (i.e., unscaled number of crab).
-#'
-#' @details CIA data begins in 2009.
+#' 
+#' @details CIA data begins in 2009. Biomass is in kg.
 #'
 #' @import magrittr
 #' 
@@ -23,8 +23,18 @@ akfinRead_CIA<-function(fn,
   #--read file
   tmp = readr::read_csv(fn);
   #----extract relevant columns
-  tmp1 = tmp[,c(2,8,14,15,17,26,28,30,31,32)];
-  names(tmp1) = c("year","target","gear code","adfg stat area","nmfs stat area","haul count","biomass","number","conf flag","vessel count");
+#  tmp1 = tmp[,c(2,8,14,15,17,26,28,30,31,32)]; <-OLD WAY (number of columns changed)
+  tmp1 = tmp[,c("Crab Year", 
+                "Trip Target Name",
+                "Agency Gear Code", 
+                "ADFG Stat Area Code", 
+                "Reporting Area Code", 
+                "Haul Count", 
+                "Estimated Crab Weight (kg)", 
+                "Estimated Number")];
+  names(tmp1) = c("year","target","gear code","adfg stat area","nmfs stat area","haul count","biomass","number");
+  tmp1[["conf flag"]]   =1;#--AKFIN dropped column in 2021
+  tmp1[["vessel count"]]=1;#--AKFIN dropped column in 2021
   
   #--convert gear codes to types
   tmp1$gear = akfinConvert_GearCodeToType(tmp1$`gear code`);

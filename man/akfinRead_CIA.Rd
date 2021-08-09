@@ -20,5 +20,5 @@ and number are kg and one's (i.e., unscaled number of crab).
 Function to read a csv file from AKFIN with CIA (Catch-in-Areas) data.
 }
 \details{
-CIA data begins in 2009.
+CIA data begins in 2009. Biomass is in kg.
 }

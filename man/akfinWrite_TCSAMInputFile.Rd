@@ -6,63 +6,29 @@
 \usage{
 akfinWrite_TCSAMInputFile(
   fishery = NULL,
-  gear = "all",
-  fn = "",
-  dfrTC_ABs = NULL,
-  dfrTC_ZCs = NULL,
-  dfrTC_SSs = NULL,
-  cutpts = NULL,
-  likeTC = "NORM2",
-  cvTC = 0.2,
-  minErrTCa = 2000,
-  minErrTCb = 2000,
-  wgtTCa = 0,
-  wgtTCb = 20,
-  unitsAbundance = "MILLIONS",
-  unitsBiomass = "THOUSANDS_MT"
+  fn = "Data.Fishery.AKFIN.inp",
+  lstAbd = NULL,
+  lstBio = NULL,
+  lstZCs = NULL
 )
 }
 \arguments{
 \item{fishery}{- TCSAM fishery name}
 
-\item{gear}{- gear type}
+\item{fn}{- output file name (writes to stdout if NULL or empty)}
 
-\item{fn}{- output file name (default writes to stdout)}
+\item{lstAbd}{- NULL, or list as returned by \link[tcsamFunctions]{inputList_AggregateCatchData} with type "ABUNDANCE"}
 
-\item{dfrTC_ABs}{- dataframe with total bycatch abundance/biomass data}
+\item{lstBio}{- NULL, or list as returned by \link[tcsamFunctions]{inputList_AggregateCatchData} with type "BIOMASS"}
 
-\item{dfrTC_ZCs}{- dataframe with total bycatch size composition data}
-
-\item{dfrTC_SSs}{- dataframe with total bycatch sample size information}
-
-\item{cutpts}{- vector with cutpts used for size comps}
-
-\item{likeTC}{- likelihood type for total bycatch ABs ("NORM2","NORMAL", or "LOGNORMAL")}
-
-\item{cvTC}{- cv for total bycatch above min error (default=0.20)}
-
-\item{minErrTCa}{- min error in total bycatch abundance (default=2000)}
-
-\item{minErrTCb}{- min error in total bycatch biomass   (default=2000 kg)}
-
-\item{wgtTCa}{- likelihood multiplier for total catch abundance}
-
-\item{wgtTCb}{- likelihood multiplier for total catch biomass}
-
-\item{unitsAbundance}{- units for output abundance ("MILLIONS" [default],"ONES")}
-
-\item{unitsBiomass}{- units for output biomass ("THOUSANDS_MT" [default],"MILLIONS_LBS","KG")}
+\item{lstZCs}{- NULL, or list as returned by \link[tcsamFunctions]{inputList_SizeCompsData}}
 }
 \value{
-null
+nothing
 }
 \description{
 Function to write AKFIN data for crab bycatch to a TCSAM input file.
 }
 \details{
-Input data scales are assumed to be:
-\itemize{
- \item{abundance - numbers of crab}
- \item{biomass - kg}
-}
+Calls \link[tcsamFunctions]{writeInputFile_FleetData} with \code{type}="FISHERY" and lstIC, lstRC, and lstDC set to NULL.
 }
