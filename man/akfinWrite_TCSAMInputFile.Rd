@@ -30,5 +30,5 @@ nothing
 Function to write AKFIN data for crab bycatch to a TCSAM input file.
 }
 \details{
-Calls \link[tcsamFunctions]{writeInputFile_FleetData} with \code{type}="FISHERY" and lstIC, lstRC, and lstDC set to NULL.
+Calls \link[tcsamFunctions]{writeInputFile_FleetData} with \code{type}="FISHERY" (and lstIC, lstRC, lstDC, and lstEff set to NULL).
 }

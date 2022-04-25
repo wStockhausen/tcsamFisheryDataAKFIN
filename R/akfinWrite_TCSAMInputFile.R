@@ -11,7 +11,7 @@
 #'
 #' @return nothing
 #'
-#' @details Calls \link[tcsamFunctions]{writeInputFile_FleetData} with \code{type}="FISHERY" and lstIC, lstRC, and lstDC set to NULL.
+#' @details Calls \link[tcsamFunctions]{writeInputFile_FleetData} with \code{type}="FISHERY" (and lstIC, lstRC, lstDC, and lstEff set to NULL).
 #'
 #' @importFrom tcsamFunctions writeInputFile_FleetData
 #' 
@@ -41,7 +41,7 @@ akfinWrite_TCSAMInputFile<-function(fishery=NULL,
                            lstTC=list(lstAbd=lstAbd,lstBio=lstBio,lstZCs=lstZCs),
                            lstDC=NULL,
                            lstIC=NULL,
-                           lstEffort=NULL);
+                           lstEff=NULL);
 }
 
 ######---old code---
