@@ -13,16 +13,16 @@ dataframe with columns 'type', 'code', and 'description'
 Function to create dataframe describing gear conversions.\cr
 
 "type" ("code") can be \cr
-               "trawl" ("TRW", "PTR" or "NPT") or \cr
-               "fixed" ("HAL","JIG","POT") \cr
+"trawl" ("TRW", "PTR" or "NPT") or \cr
+"fixed" ("HAL","JIG","POT") \cr
 
 "code" ("description") can be \cr
-              "TRW" ("TRAWL"),\cr
-              "PTR" ("PELAGIC" or "PAIR TRAWL"),\cr
-              "NPT" ("NON PELAGIC"),\cr
-              "HAL" ("LONGLINER"),\cr
-              "POT" ("POT OR TRAP"),\cr
-              "JIG" ("JIG")\cr
+"TRW" ("TRAWL"),\cr
+"PTR" ("PELAGIC" or "PAIR TRAWL"),\cr
+"NPT" ("NON PELAGIC"),\cr
+"HAL" ("LONGLINER"),\cr
+"POT" ("POT OR TRAP"),\cr
+"JIG" ("JIG")\cr
 }
 \details{
 None.

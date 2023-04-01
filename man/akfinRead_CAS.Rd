@@ -7,14 +7,14 @@
 akfinRead_CAS(fn, bycatch_species_code = "BTCR", minYear = 1991)
 }
 \arguments{
-\item{fn}{- filename for bycatch estimates from the Catch Accounting System database}
+\item{fn}{: filename for bycatch estimates from the Catch Accounting System database}
 
-\item{bycatch_species_code}{- FMA species code (default = "BTCR", for bairdi Tanner crab)}
+\item{bycatch_species_code}{: FMA species code (default = "BTCR", for bairdi Tanner crab)}
 
-\item{minYear}{- min fishery year to extract}
+\item{minYear}{: min fishery year to extract}
 }
 \value{
-tibble with columns "year","gear","area","target","num",and "wgt". 
+tibble with columns "year","gear","area","target","num",and "wgt".
 Units for biomass (\code{wgt}) and number (\code{num}) are kg and one's (i.e., unscaled number of crab).
 }
 \description{

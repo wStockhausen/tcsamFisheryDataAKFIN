@@ -3,8 +3,8 @@
 #'
 #' @description Function to read a csv file from AKFIN with CIA (Catch-in-Areas) data.
 #'
-#' @param fn - filename for bycatch estimates from the Catch-in-Areas database
-#' @param minYear - min fishery year to extract
+#' @param fn : filename for bycatch estimates from the Catch-in-Areas database
+#' @param minYear : min fishery year to extract
 #'
 #' @return tibble with columns "year","target","gear code","adfg stat area","nmfs stat area",
 #' "haul count","biomass","number","conf flag","vessel count", and "gear". Units for biomass
@@ -12,8 +12,6 @@
 #' 
 #' @details CIA data begins in 2009. Biomass is in kg.
 #'
-#' @import magrittr
-#' 
 #' @importFrom readr read_csv
 #'
 #' @export
@@ -45,7 +43,7 @@ akfinRead_CIA<-function(fn,
   tmp1$lon = dfrLLs$lon;
   
   #--extract required years
-  tblCIA = tmp1 %>% subset(minYear<=year);
+  tblCIA = tmp1 |> subset(minYear<=year);
   return(tblCIA);
 }
 
@@ -54,9 +52,9 @@ akfinRead_CIA<-function(fn,
 #'
 #' @description Function to read a csv file from AKFIN with CAS (Catch Accounting System) data.
 #'
-#' @param fn - filename for bycatch estimates from the Catch Accounting System database
-#' @param bycatch_species_code - FMA species code (default = "BTCR", for bairdi Tanner crab)
-#' @param minYear - min fishery year to extract
+#' @param fn : filename for bycatch estimates from the Catch Accounting System database
+#' @param bycatch_species_code : FMA species code (default = "BTCR", for bairdi Tanner crab)
+#' @param minYear : min fishery year to extract
 #'
 #' @return tibble with columns "year","gear","area","target","num",and "wgt". 
 #' Units for biomass (\code{wgt}) and number (\code{num}) are kg and one's (i.e., unscaled number of crab).
@@ -64,8 +62,6 @@ akfinRead_CIA<-function(fn,
 #' @details Valid CAS data begins in 1991 and ends in 2009 (it overlaps with the CIA database a bit).
 #' The "gear" reported here is represents gear "type" as used in the Conversion functions. 
 #'
-#' @import magrittr
-#' 
 #' @importFrom readr read_csv
 #'
 #' @export
@@ -127,8 +123,8 @@ akfinRead_NorpacLengthReport<-function(fn){
   names(dfrp)<-c("year","date","gear description","area","sex","size","N","lat_s","lon_s","lat_e","lon_e");
   
   #------extract lat, lon and convert to stat areas
-  dfrp<-dfrp %>% rowwise() %>% 
-                 mutate(lat=Sum(c(lat_s,lat_e)/count(c(lat_s,lat_e))),lon=Sum(c(lon_s,lon_e)/count(c(lon_s,lon_e)))) %>%
+  dfrp<-dfrp |> rowwise() |> 
+                 mutate(lat=Sum(c(lat_s,lat_e)/count(c(lat_s,lat_e))),lon=Sum(c(lon_s,lon_e)/count(c(lon_s,lon_e)))) |>
                  ungroup();
   stat_areas<-akfinConvert_LatLonsToADFGStatAreas(dfrp);
   dfrp$`adfg stat area`<-stat_areas;

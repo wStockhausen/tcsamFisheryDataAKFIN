@@ -7,10 +7,12 @@
 akfinRead_NorpacLengthReport(fn)
 }
 \arguments{
-\item{fn}{- filename for size composition data from the NORPAC database}
+\item{fn}{\itemize{
+\item filename for size composition data from the NORPAC database
+}}
 }
 \value{
-tibble with columns "year","gear","area","sex","size",and "N", 
+tibble with columns "year","gear","area","sex","size",and "N",
 "gear code","lat","lon",and "adfg stat area". "gear" here represents the
 gear "type" from the Conversion functions whereas "gear code" represents the
 gear "code" from those functions.

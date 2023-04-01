@@ -7,11 +7,11 @@
 akfinConvert_LatLonsToADFGStatAreas(dfr, latCol = "lat", lonCol = "lon")
 }
 \arguments{
-\item{dfr}{- dataframe with lat, lon coordinates}
+\item{dfr}{: dataframe with lat, lon coordinates}
 
-\item{latCol}{- name of column with latitudes}
+\item{latCol}{: name of column with latitudes}
 
-\item{lonCol}{- name of column with longitudes}
+\item{lonCol}{: name of column with longitudes}
 }
 \value{
 a character vector with the ADFG stat area corresponding to each set
@@ -21,11 +21,11 @@ of lat-lon coordinates.
 Function to convert lat-lon coordinates to ADFG stat areas.
 }
 \details{
-ADFG stat areas are coded AABBCC, where\cr 
+ADFG stat areas are coded AABBCC, where\cr
 lon = 100+AA W longitude \cr
 and \cr
 lat = BB+CC/60 N latitude \cr
-in decimal degrees. 
+in decimal degrees.
 
 AABBCC represents the lower right corner
 of the stat area.

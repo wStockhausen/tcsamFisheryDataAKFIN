@@ -7,7 +7,7 @@
 akfinConvert_SexCodes(x)
 }
 \arguments{
-\item{x}{- vector of sex codes to convert}
+\item{x}{: vector of sex codes to convert}
 }
 \value{
 character vector with same length as x
@@ -16,6 +16,6 @@ character vector with same length as x
 Function to convert sex codes to descriptions.
 }
 \details{
-Uses conversions from \code{code} to \code{sex} 
-defined by \code{akfin.GetSexConversions}.
+Uses conversions from \code{code} to \code{sex}
+defined by \code{\link[=akfinGet_GearConversions]{akfinGet_GearConversions()}}.
 }

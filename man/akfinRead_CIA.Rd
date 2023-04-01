@@ -7,9 +7,9 @@
 akfinRead_CIA(fn, minYear = 2009)
 }
 \arguments{
-\item{fn}{- filename for bycatch estimates from the Catch-in-Areas database}
+\item{fn}{: filename for bycatch estimates from the Catch-in-Areas database}
 
-\item{minYear}{- min fishery year to extract}
+\item{minYear}{: min fishery year to extract}
 }
 \value{
 tibble with columns "year","target","gear code","adfg stat area","nmfs stat area",

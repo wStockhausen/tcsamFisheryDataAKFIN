@@ -13,15 +13,15 @@ akfinWrite_TCSAMInputFile(
 )
 }
 \arguments{
-\item{fishery}{- TCSAM fishery name}
+\item{fishery}{: TCSAM fishery name}
 
-\item{fn}{- output file name (writes to stdout if NULL or empty)}
+\item{fn}{: output file name (writes to stdout if NULL or empty)}
 
-\item{lstAbd}{- NULL, or list as returned by \link[tcsamFunctions]{inputList_AggregateCatchData} with type "ABUNDANCE"}
+\item{lstAbd}{: NULL, or list as returned by \code{\link[tcsamFunctions:inputList_AggregateCatchData]{tcsamFunctions::inputList_AggregateCatchData()}} with type "ABUNDANCE"}
 
-\item{lstBio}{- NULL, or list as returned by \link[tcsamFunctions]{inputList_AggregateCatchData} with type "BIOMASS"}
+\item{lstBio}{: NULL, or list as returned by \code{\link[tcsamFunctions:inputList_AggregateCatchData]{tcsamFunctions::inputList_AggregateCatchData()}} with type "BIOMASS"}
 
-\item{lstZCs}{- NULL, or list as returned by \link[tcsamFunctions]{inputList_SizeCompsData}}
+\item{lstZCs}{: NULL, or list as returned by \code{\link[tcsamFunctions:inputList_SizeCompsData]{tcsamFunctions::inputList_SizeCompsData()}}}
 }
 \value{
 nothing
@@ -30,5 +30,5 @@ nothing
 Function to write AKFIN data for crab bycatch to a TCSAM input file.
 }
 \details{
-Calls \link[tcsamFunctions]{writeInputFile_FleetData} with \code{type}="FISHERY" (and lstIC, lstRC, lstDC, and lstEff set to NULL).
+Calls \code{\link[tcsamFunctions:writeInputFile_FleetData]{tcsamFunctions::writeInputFile_FleetData()}} with \code{type}="FISHERY" (and lstIC, lstRC, lstDC, and lstEff set to NULL).
 }

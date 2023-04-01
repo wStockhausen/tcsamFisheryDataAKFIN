@@ -24,7 +24,6 @@
 #' Historical (foreign, joint veture) data runs 1973-1990. CAS data is used for 1991-2008. CIA data is used for
 #' 2009+.
 #'
-#' @import magrittr
 #' @import dplyr
 #' 
 #' @importFrom sqldf sqldf
@@ -60,16 +59,16 @@ akfin.calcBycatchABs<-function(maxYear=2019,
   
   #----get historical data (biomass only, in millions lbs)
   tmp<-readr::read_csv(fnHIS);
-  dfrHIS<-tmp %>% 
-             dplyr::mutate(num=NA,wgt=`biomass (MLBS)`*(LBStoKG*MILLION)) %>%
-             dplyr::select(!tidyselect::contains("biomass (MLBS)")) %>%
+  dfrHIS<-tmp |> 
+             dplyr::mutate(num=NA,wgt=`biomass (MLBS)`*(LBStoKG*MILLION)) |>
+             dplyr::select(!tidyselect::contains("biomass (MLBS)")) |>
              subset(year<mnYrCAS);
   #------num values (absent) are in one's, wgt values in kg
   rm(tmp);
   
   #----process estimated bycatch numbers and weight by year, gear, and area from CAS/Blend database
   tmp<-akfinRead_CAS(fnCAS);
-  dfrCAS<-tmp %>% subset((mnYrCAS<=year)&(year<mnYrCIA));
+  dfrCAS<-tmp |> subset((mnYrCAS<=year)&(year<mnYrCIA));
   #------num values are in one's, wgt values in kg
   rm(tmp);
   
@@ -85,7 +84,7 @@ akfin.calcBycatchABs<-function(maxYear=2019,
             year,gear,`nmfs stat area`,target;";
   tmp1<-sqldf::sqldf(query);
   names(tmp1)[3]<-"area";
-  dfrCIA<-tmp1 %>% subset((mnYrCIA<=year)&(year<=maxYear));
+  dfrCIA<-tmp1 |> subset((mnYrCIA<=year)&(year<=maxYear));
   #------num values are in one's, wgt values in kg
   rm(tmp1,tblCIA);
   
@@ -122,7 +121,6 @@ akfin.calcBycatchABs<-function(maxYear=2019,
 #' @details Historical (foreign, joint venture) size composition data runs 1973-1990. NORPAC size composition data
 #' starts in 1986, but is typically not used until 1991.
 #'
-#' @import magrittr
 #' @import dplyr
 #' 
 #' @importFrom sqldf sqldf
@@ -142,10 +140,10 @@ akfin.calcUnscaledZCs<-function(maxYear=2019,
   if (!is.null(fnHisZCs)){
     tblHIS<-readr::read_csv(fnHisZCs);
     #--add gear, N columns, drop count column, keep only before 1991
-    dfrZCs.HIS <- tblHIS %>% 
-                dplyr::mutate(gear="undetermined",area="undetermined",N=count) %>% 
-                dplyr::mutate(count=NULL) %>% 
-                dplyr::relocate(gear,area,.after=year)  %>%
+    dfrZCs.HIS <- tblHIS |> 
+                dplyr::mutate(gear="undetermined",area="undetermined",N=count) |> 
+                dplyr::mutate(count=NULL) |> 
+                dplyr::relocate(gear,area,.after=year)  |>
                 subset(year<=1990);
     #--re-calculate size comps to cutpts
     dfrZCs.HIS<-wtsSizeComps::calcSizeComps(dfrZCs.HIS,
@@ -173,8 +171,8 @@ akfin.calcUnscaledZCs<-function(maxYear=2019,
     
     #--keep minYr on, drop "unidentified" sex
     minYr = ifelse(!is.null(dfrZCs.HIS),1991,1986);
-    dfrNLR <- tblNLR %>% 
-                subset((year>=minYr)&(year<=maxYear)) %>% 
+    dfrNLR <- tblNLR |> 
+                subset((year>=minYr)&(year<=maxYear)) |> 
                 subset((sex!="unidentified"));
     
     #--bin and aggregate
@@ -226,7 +224,6 @@ akfin.calcUnscaledZCs<-function(maxYear=2019,
 #' for years in which such exists. For years in which total bycatch abundance is not available, the size
 #' compositions are not scaled.
 #'
-#' @import magrittr
 #' @import dplyr
 #' 
 #' @importFrom sqldf sqldf
@@ -242,15 +239,15 @@ akfin.ScaleZCs<-function(dfrABs.YGAT,
                          truncate.high=FALSE){
   Sum<-wtsUtilities::Sum;
   #----calculate total observed numbers by year, gear, and area
-  dfrONs.YGA<-dfrZCs.onYGAXZ %>%
-                  dplyr::group_by(year,gear,area) %>%
-                  dplyr::summarize(obsNum=wtsUtilities::Sum(N)) %>%
+  dfrONs.YGA<-dfrZCs.onYGAXZ |>
+                  dplyr::group_by(year,gear,area) |>
+                  dplyr::summarize(obsNum=wtsUtilities::Sum(N)) |>
                   dplyr::ungroup();
   #----calculate total bycatch numbers by year, gear, and area
-  dfrTNs.YGA<-dfrABs.YGAT %>%
-                  subset(!is.na(num)) %>%
-                  dplyr::group_by(year,gear,area) %>%
-                  dplyr::summarize(totNum=wtsUtilities::Sum(num)) %>%
+  dfrTNs.YGA<-dfrABs.YGAT |>
+                  subset(!is.na(num)) |>
+                  dplyr::group_by(year,gear,area) |>
+                  dplyr::summarize(totNum=wtsUtilities::Sum(num)) |>
                   dplyr::ungroup();
 
   #----calculate YGA-specific multipliers to expand observed numbers to estimated total numbers
@@ -270,16 +267,16 @@ akfin.ScaleZCs<-function(dfrABs.YGAT,
   dfrXFs.YGA<-sqldf::sqldf(query);
 
   #----need to finish areas with catch but no size data
-  dfrTNs.YG<-dfrTNs.YGA %>%
-                  dplyr::group_by(year,gear) %>%
-                  dplyr::summarize(estNumTot=wtsUtilities::Sum(totNum)) %>%
+  dfrTNs.YG<-dfrTNs.YGA |>
+                  dplyr::group_by(year,gear) |>
+                  dplyr::summarize(estNumTot=wtsUtilities::Sum(totNum)) |>
                   dplyr::ungroup();
-  dfrTNs.YGp<-dfrXFs.YGA  %>%
-                  dplyr::group_by(year,gear) %>%
-                  dplyr::summarize(estNumTotP=Sum(estNum)) %>%
+  dfrTNs.YGp<-dfrXFs.YGA  |>
+                  dplyr::group_by(year,gear) |>
+                  dplyr::summarize(estNumTotP=Sum(estNum)) |>
                   dplyr::ungroup();
   dfrTNs.YG<-cbind(dfrTNs.YG,estNumTotP=dfrTNs.YGp$estNumTotP);
-  dfrTNs.YG<-dfrTNs.YG %>% dplyr::mutate(xfac=estNumTot/estNumTotP);
+  dfrTNs.YG<-dfrTNs.YG |> dplyr::mutate(xfac=estNumTot/estNumTotP);
 
   ont<-dfrXFs.YGA;
   ent<-dfrTNs.YG;
@@ -316,14 +313,14 @@ akfin.ScaleZCs<-function(dfrABs.YGAT,
   rm(ont,emt);
   
   #check on calculations
-  dfrA1s.YG = dfrZCs.tnYGAXZ %>% 
-                dplyr::group_by(year,gear) %>% 
-                dplyr::summarize(totNum1=Sum(N)) %>%
+  dfrA1s.YG = dfrZCs.tnYGAXZ |> 
+                dplyr::group_by(year,gear) |> 
+                dplyr::summarize(totNum1=Sum(N)) |>
                 dplyr::ungroup();
-  dfrA2s.YG = dfrABs.YGAT %>% 
-                subset(year>=1991) %>%
-                dplyr::group_by(year,gear) %>% 
-                dplyr::summarize(totNum2=Sum(num)) %>%
+  dfrA2s.YG = dfrABs.YGAT |> 
+                subset(year>=1991) |>
+                dplyr::group_by(year,gear) |> 
+                dplyr::summarize(totNum2=Sum(num)) |>
                 dplyr::ungroup();
   idx<-abs((dfrA1s.YG$totNum1-dfrA2s.YG$totNum2)/(dfrA1s.YG$totNum1+dfrA2s.YG$totNum2))>0.0001;
   if (sum(idx)>0) {
@@ -338,7 +335,7 @@ akfin.ScaleZCs<-function(dfrABs.YGAT,
   uY1s<-sort(unique(dfrZCs.onYGAXZ$year));
   uY2s<-sort(unique(dfrZCs.tnYGAXZ$year));
   uY1not2s<-uY1s[!(uY1s %in% uY2s)];
-  dfrZCs<-rbind(dfrZCs.onYGAXZ %>% subset(year %in% uY1not2s),
+  dfrZCs<-rbind(dfrZCs.onYGAXZ |> subset(year %in% uY1not2s),
                 dfrZCs.tnYGAXZ);
   
   #--re-bin size comps to output cutpts

@@ -15,19 +15,31 @@ akfin.calcUnscaledZCs(
 )
 }
 \arguments{
-\item{maxYear}{- max fishery year to extract}
+\item{maxYear}{\itemize{
+\item max fishery year to extract
+}}
 
-\item{fnHisZCs}{- file name for size composition estimates (numbers of crab) from "historical data" (pre-CAS)}
+\item{fnHisZCs}{\itemize{
+\item file name for size composition estimates (numbers of crab) from "historical data" (pre-CAS)
+}}
 
-\item{fnNORPAC}{- file name for size data (numbers of crab) from a NORPAC length report file}
+\item{fnNORPAC}{\itemize{
+\item file name for size data (numbers of crab) from a NORPAC length report file
+}}
 
-\item{id.facs}{- character vector of column names to use as factors in calculating size compositions}
+\item{id.facs}{\itemize{
+\item character vector of column names to use as factors in calculating size compositions
+}}
 
-\item{cutpts}{- cut points for size bins (default is 0-185 by 5)}
+\item{cutpts}{\itemize{
+\item cut points for size bins (default is 0-185 by 5)
+}}
 
 \item{truncate.low}{-flag to truncate counts/abundance below the minimum size or include in first size bin (FALSE)}
 
-\item{truncate.high}{- flag to truncate counts/abundance above the maximum size (TRUE) or include in final size bin (FALSE)}
+\item{truncate.high}{\itemize{
+\item flag to truncate counts/abundance above the maximum size (TRUE) or include in final size bin (FALSE)
+}}
 }
 \value{
 tibble with columns 'year','gear','area','sex','maturity','shell condition','size','N'

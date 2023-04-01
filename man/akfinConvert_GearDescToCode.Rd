@@ -7,7 +7,7 @@
 akfinConvert_GearDescToCode(x)
 }
 \arguments{
-\item{x}{- vector of gear descriptions to convert to gear codes}
+\item{x}{: vector of gear descriptions to convert to gear codes}
 }
 \value{
 character vector with same length as x
@@ -16,6 +16,6 @@ character vector with same length as x
 Function to convert gear descriptions to gear codes.
 }
 \details{
-Uses conversions from \code{description} to \code{code} 
-defined by \code{akfin.GetGearConversions}.
+Uses conversions from \code{description} to \code{code}
+defined by \code{\link[=akfinGet_GearConversions]{akfinGet_GearConversions()}}.
 }

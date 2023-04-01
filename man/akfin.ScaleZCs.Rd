@@ -13,15 +13,23 @@ akfin.ScaleZCs(
 )
 }
 \arguments{
-\item{dfrABs.YGAT}{- dataframe with total abundance by YGAT}
+\item{dfrABs.YGAT}{\itemize{
+\item dataframe with total abundance by YGAT
+}}
 
-\item{dfrZCs.onYGAXZ}{- dataframe with "raw" number size compositions by YGAX}
+\item{dfrZCs.onYGAXZ}{\itemize{
+\item dataframe with "raw" number size compositions by YGAX
+}}
 
-\item{cutpts}{- cutpts for scale size compositions (default is 25->185 by 5)}
+\item{cutpts}{\itemize{
+\item cutpts for scale size compositions (default is 25->185 by 5)
+}}
 
 \item{truncate.low}{-flag to truncate counts/abundance below the minimum size or include in first size bin (FALSE)}
 
-\item{truncate.high}{- flag to truncate counts/abundance above the maximum size (TRUE) or include in final size bin (FALSE)}
+\item{truncate.high}{\itemize{
+\item flag to truncate counts/abundance above the maximum size (TRUE) or include in final size bin (FALSE)
+}}
 }
 \value{
 tibble with columns 'year','gear','area','sex','maturity','shell condition','size','N'
@@ -30,7 +38,7 @@ tibble with columns 'year','gear','area','sex','maturity','shell condition','siz
 Function to calculate estimated total catch abundance by expanding observed abundance.
 }
 \details{
-Estimated total annual bycatch abundance from the CAS and CIA databases (as a tibble from 
+Estimated total annual bycatch abundance from the CAS and CIA databases (as a tibble from
 \code{akfin.calcBycatchABs}) is used to scale unscaled size compositions (a tibble from \code{akfin.calcUnscaledZCs})
 for years in which such exists. For years in which total bycatch abundance is not available, the size
 compositions are not scaled.

@@ -3,7 +3,7 @@
 #'
 #' @description Function to convert ADFG stat areas to lat-lon coordinates.
 #'
-#' @param stat_areas - character vector of ADFG stat areas
+#' @param stat_areas : character vector of ADFG stat areas
 #'
 #' @return a tibble with columns "lat", "lon" representing the center of each stat area.
 #'
@@ -30,9 +30,9 @@ akfinConvert_ADFGStatAreasToLatLons<-function(stat_areas){
 #'
 #' @description Function to convert lat-lon coordinates to ADFG stat areas.
 #'
-#' @param dfr - dataframe with lat, lon coordinates
-#' @param latCol - name of column with latitudes
-#' @param lonCol - name of column with longitudes
+#' @param dfr : dataframe with lat, lon coordinates
+#' @param latCol : name of column with latitudes
+#' @param lonCol : name of column with longitudes
 #'
 #' @return a character vector with the ADFG stat area corresponding to each set
 #' of lat-lon coordinates.

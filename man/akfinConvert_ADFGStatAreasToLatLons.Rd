@@ -7,7 +7,7 @@
 akfinConvert_ADFGStatAreasToLatLons(stat_areas)
 }
 \arguments{
-\item{stat_areas}{- character vector of ADFG stat areas}
+\item{stat_areas}{: character vector of ADFG stat areas}
 }
 \value{
 a tibble with columns "lat", "lon" representing the center of each stat area.
@@ -16,11 +16,11 @@ a tibble with columns "lat", "lon" representing the center of each stat area.
 Function to convert ADFG stat areas to lat-lon coordinates.
 }
 \details{
-ADFG stat areas are coded AABBCC, where\cr 
+ADFG stat areas are coded AABBCC, where\cr
 lon = 100+AA W longitude \cr
 and \cr
 lat = BB+CC/60 N latitude \cr
-in decimal degrees. 
+in decimal degrees.
 
 AABBCC represents the lower right corner
 of the stat area.

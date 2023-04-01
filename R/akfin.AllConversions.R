@@ -38,12 +38,12 @@ akfinGet_GearConversions<-function(){
 #'
 #' @description Function to convert gear descriptions to gear types.
 #' 
-#' @param x - vector of gear descriptions to convert to gear types
+#' @param x : vector of gear descriptions to convert to gear types
 #'
 #' @return character vector with same length as x
 #'
 #' @details Uses conversions from \code{description} to \code{type} 
-#' defined by \code{akfin.GetGearConversions}.
+#' defined by [akfinGet_GearConversions()].
 #'
 #' @export
 #'
@@ -63,12 +63,12 @@ akfinConvert_GearDescToType<-function(x){
 #'
 #' @description Function to convert gear codes to gear types.
 #' 
-#' @param x - vector of gear codes to convert to gear types
+#' @param x : vector of gear codes to convert to gear types
 #'
 #' @return character vector with same length as x
 #'
 #' @details Uses conversions from \code{code} to \code{type} 
-#' defined by \code{akfin.GetGearConversions}.
+#' defined by [akfinGet_GearConversions()].
 #'
 #' @export
 #'
@@ -88,12 +88,12 @@ akfinConvert_GearCodeToType<-function(x){
 #'
 #' @description Function to convert gear descriptions to gear codes.
 #' 
-#' @param x - vector of gear descriptions to convert to gear codes
+#' @param x : vector of gear descriptions to convert to gear codes
 #'
 #' @return character vector with same length as x
 #'
 #' @details Uses conversions from \code{description} to \code{code} 
-#' defined by \code{akfin.GetGearConversions}.
+#' defined by [akfinGet_GearConversions()].
 #'
 #' @export
 #'
@@ -132,12 +132,12 @@ akfinGet_SexConversions<-function(){
 #'
 #' @description Function to convert sex codes to descriptions.
 #' 
-#' @param x - vector of sex codes to convert
+#' @param x : vector of sex codes to convert
 #'
 #' @return character vector with same length as x
 #'
 #' @details Uses conversions from \code{code} to \code{sex} 
-#' defined by \code{akfin.GetSexConversions}.
+#' defined by [akfinGet_GearConversions()].
 #'
 #' @export
 #'
