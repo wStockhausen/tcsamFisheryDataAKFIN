@@ -342,12 +342,13 @@ akfin.ScaleZCs<-function(dfrABs.YGAT,
   dfrZCs<-wtsSizeComps::rebinSizeComps(dfrZCs,
                                       id.size="size",
                                       id.value="N",
-                                      id.facs=c("year","gear","sex","maturity","shell condition"),
+                                      id.facs=c("year","gear","area","sex","maturity","shell condition"),
                                       cutpts=cutpts,
                                       truncate.low=truncate.low,
                                       truncate.high=truncate.high);
   return(dfrZCs);
 }
+#--testing
 # dfrZCs.tnYGAXZ<-akfin.ScaleZCs(dfrABs.YGAT,
 #                                dfrZCs.onYGAXZ,
 #                                cutpts=seq(25,185,5),
