@@ -137,7 +137,7 @@ akfinGet_SexConversions<-function(){
 #' @return character vector with same length as x
 #'
 #' @details Uses conversions from \code{code} to \code{sex} 
-#' defined by [akfinGet_GearConversions()].
+#' defined by [akfinGet_SexConversions()].
 #'
 #' @export
 #'

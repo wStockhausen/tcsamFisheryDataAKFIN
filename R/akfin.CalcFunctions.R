@@ -57,7 +57,7 @@ akfin.calcBycatchABs<-function(maxYear=2019,
   #----combine historical, CAS, and CIA data
   #----final dataframe will have columns year, gear, area, target, num, wgt (kg)
   
-  #----get historical data (biomass only, in millions lbs)
+  #----get historical data (biomass only, in millions lbs, gear type is 'undetermined')
   tmp<-readr::read_csv(fnHIS);
   dfrHIS<-tmp |> 
              dplyr::mutate(num=NA,wgt=`biomass (MLBS)`*(LBStoKG*MILLION)) |>
