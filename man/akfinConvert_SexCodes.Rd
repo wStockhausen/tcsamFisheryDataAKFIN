@@ -17,5 +17,5 @@ Function to convert sex codes to descriptions.
 }
 \details{
 Uses conversions from \code{code} to \code{sex}
-defined by \code{\link[=akfinGet_GearConversions]{akfinGet_GearConversions()}}.
+defined by \code{\link[=akfinGet_SexConversions]{akfinGet_SexConversions()}}.
 }

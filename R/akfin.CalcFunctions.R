@@ -207,9 +207,9 @@ akfin.calcUnscaledZCs<-function(maxYear=2019,
 # dfrZCs.onYGAXZ<-akfin.calcUnscaledZCs(fnHisZCs=fnHisZCs,
 #                                       fnNORPAC=fnNORPAC);
 
-#' @title Calculate estimated total bycatch abundance and biomass of Tanner crab in groundfish fisheries
+#' @title Calculate estimated total bycatch abundance-scaled size comps of Tanner crab in groundfish fisheries
 #'
-#' @description Function to calculate estimated total catch abundance by expanding observed abundance.
+#' @description Function to calculate estimated total bycatch abundance-scaled size comps of Tanner crab in groundfish fisheries.
 #'
 #' @param dfrABs.YGAT - dataframe with total abundance by YGAT
 #' @param dfrZCs.onYGAXZ - dataframe with "raw" number size compositions by YGAX
@@ -238,12 +238,12 @@ akfin.ScaleZCs<-function(dfrABs.YGAT,
                          truncate.low=TRUE,
                          truncate.high=FALSE){
   Sum<-wtsUtilities::Sum;
-  #----calculate total observed numbers by year, gear, and area
+  #----calculate total observed numbers by year, gear, and area----
   dfrONs.YGA<-dfrZCs.onYGAXZ |>
                   dplyr::group_by(year,gear,area) |>
                   dplyr::summarize(obsNum=wtsUtilities::Sum(N)) |>
                   dplyr::ungroup();
-  #----calculate total bycatch numbers by year, gear, and area
+  #----calculate total bycatch numbers by year, gear, and area----
   dfrTNs.YGA<-dfrABs.YGAT |>
                   subset(!is.na(num)) |>
                   dplyr::group_by(year,gear,area) |>
@@ -318,26 +318,26 @@ akfin.ScaleZCs<-function(dfrABs.YGAT,
                 dplyr::summarize(totNum1=Sum(N)) |>
                 dplyr::ungroup();
   dfrA2s.YG = dfrABs.YGAT |> 
-                subset(year>=1991) |>
                 dplyr::group_by(year,gear) |> 
                 dplyr::summarize(totNum2=Sum(num)) |>
                 dplyr::ungroup();
-  idx<-abs((dfrA1s.YG$totNum1-dfrA2s.YG$totNum2)/(dfrA1s.YG$totNum1+dfrA2s.YG$totNum2))>0.0001;
-  if (sum(idx)>0) {
+  dfrChk = dfrA1s.YG |>  
+             dplyr::inner_join(dfrA2s.YG,by=c("year","gear")) |> 
+             dplyr::mutate(absdiff=abs((totNum1-totNum2)/(totNum1+totNum2)));
+  if (max(dfrChk$absdiff)>0.0001) {
     msg<-paste0("Problem with expansion of size comps!\n")
     warning(msg)
-    dfr=cbind(dfrA1s.YG,dfrA2s.YG[,"totNum2"]);
-    dfr$diff = abs((dfrA1s.YG$totNum1-dfrA2s.YG$totNum2)/(dfrA1s.YG$totNum1+dfrA2s.YG$totNum2))
-    print(dfr);
+    print(dfrChk |> dplyr::filter(dfrChk$absdiff>0.0001));
   }
   
   #--combine ZCs that could not be expanded with those that were
   uY1s<-sort(unique(dfrZCs.onYGAXZ$year));
   uY2s<-sort(unique(dfrZCs.tnYGAXZ$year));
   uY1not2s<-uY1s[!(uY1s %in% uY2s)];
+
   dfrZCs<-rbind(dfrZCs.onYGAXZ |> subset(year %in% uY1not2s),
                 dfrZCs.tnYGAXZ);
-  
+
   #--re-bin size comps to output cutpts
   dfrZCs<-wtsSizeComps::rebinSizeComps(dfrZCs,
                                       id.size="size",

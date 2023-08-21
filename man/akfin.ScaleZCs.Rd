@@ -2,7 +2,7 @@
 % Please edit documentation in R/akfin.CalcFunctions.R
 \name{akfin.ScaleZCs}
 \alias{akfin.ScaleZCs}
-\title{Calculate estimated total bycatch abundance and biomass of Tanner crab in groundfish fisheries}
+\title{Calculate estimated total bycatch abundance-scaled size comps of Tanner crab in groundfish fisheries}
 \usage{
 akfin.ScaleZCs(
   dfrABs.YGAT,
@@ -35,7 +35,7 @@ akfin.ScaleZCs(
 tibble with columns 'year','gear','area','sex','maturity','shell condition','size','N'
 }
 \description{
-Function to calculate estimated total catch abundance by expanding observed abundance.
+Function to calculate estimated total bycatch abundance-scaled size comps of Tanner crab in groundfish fisheries.
 }
 \details{
 Estimated total annual bycatch abundance from the CAS and CIA databases (as a tibble from
